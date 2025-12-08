@@ -1,0 +1,37 @@
+
+services:
+  synapse:
+    container_name: synapse
+    image: docker.io/matrixdotorg/synapse:latest
+    restart: unless-stopped
+    environment:
+      - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
+      - UID=1000
+      - GID=1000
+    volumes:
+      - /home/basti0don/matrix/synapse:/data
+    depends_on:
+      - postgres
+    networks:
+      - matrix-net
+
+  postgres:
+    container_name: postgres
+    image: docker.io/postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=synapse
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=synapse
+      - POSTGRES_INITDB_ARGS=--ENCODING=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - /home/basti0don/matrix/synapse-db/schemas:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - matrix-net
+
+#figure out proxy network after adding traefik
+networks:
+  matrix-net:
+    - matrix-net
