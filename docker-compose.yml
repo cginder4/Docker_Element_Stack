@@ -31,6 +31,14 @@ services:
     networks:
       - matrix-net
 
+  cloudflared-tunnel: #basic cloudflare container - will probably need changes
+    container_name: cloudflare_tunnel
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: ["tunnel", "--no-autoupdate", "run", "--token", "${CLOUDFLARE_TUNNEL_TOKEN}"]
+    env_file:
+      - .env
+
 #figure out proxy network after adding traefik
 networks:
   matrix-net:
