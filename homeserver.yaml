@@ -1,0 +1,24 @@
+server_name: #domain name for server goes here
+pid_file: /data/homeserver.pid
+
+listeners:
+  - port: 8008
+    type: http
+    tls: false
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+
+database:
+  name: psycopg2
+  args:
+    host: db
+    port: 5432
+    user: synapse
+    password: #database password goes here
+    database: synapse
+
+report_stats: false
+registration_shared_secret: #use randomly generated string for secret - i manually register for a very small server anyway
+
+media_store_path: "/data/media_store"
